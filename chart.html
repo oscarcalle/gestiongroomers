@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráficos de Porcentajes</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #192A56;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #chartsContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+        .chart-container canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .chart-container .chart-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chartsContainer">
+    <div class="chart-container">
+        <canvas id="chart1"></canvas>
+        <div class="chart-value">61%</div>
+    </div>
+    <div class="chart-container">
+        <canvas id="chart2"></canvas>
+        <div class="chart-value">24%</div>
+    </div>
+    <div class="chart-container">
+        <canvas id="chart3"></canvas>
+        <div class="chart-value">15%</div>
+    </div>
+</div>
+
+<script>
+    // Configuración para el gráfico de 61%
+    const chart1 = document.getElementById('chart1').getContext('2d');
+    new Chart(chart1, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [61, 39],
+                backgroundColor: ['cyan', '#333'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            cutout: '80%',
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // Configuración para el gráfico de 24%
+    const chart2 = document.getElementById('chart2').getContext('2d');
+    new Chart(chart2, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [24, 76],
+                backgroundColor: ['red', '#333'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            cutout: '80%',
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // Configuración para el gráfico de 15%
+    const chart3 = document.getElementById('chart3').getContext('2d');
+    new Chart(chart3, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [15, 85],
+                backgroundColor: ['magenta', '#333'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            cutout: '80%',
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
