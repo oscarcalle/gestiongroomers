@@ -11,10 +11,11 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
   color: #FFF;
-  background: -webkit-linear-gradient(90deg, #7209d4, #2832d4 33%, #00a5b2);
-	background: -moz-linear-gradient(90deg, #7209d4, #2832d4 33%, #00a5b2);
-	background: -o-linear-gradient(90deg, #7209d4, #2832d4 33%, #00a5b2);
-	background: linear-gradient(90deg, #7209d4, #2832d4 33%, #00a5b2);
+  text-shadow: #FC0 1px 0 10px;
+}
+
+.logo{
+  filter: drop-shadow(0 0 0.75rem rgb(27, 20, 220));
 }
 
 .form-signin {

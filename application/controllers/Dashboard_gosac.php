@@ -10,9 +10,9 @@ class Dashboard_gosac extends CI_Controller {
         parent::__construct();
         $this->load->model(['Menu_model', 'AsignarMenu_model']);
         
-        // if ($this->session->userdata('status') !== "AezakmiHesoyamWhosyourdaddy") {
-        //     redirect(base_url("Login"));
-        // }
+         if ($this->session->userdata('status') !== "AezakmiHesoyamWhosyourdaddy") {
+             redirect(base_url("Login"));
+        }
     }
 
     public function index() {

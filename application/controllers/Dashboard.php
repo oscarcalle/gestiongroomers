@@ -10,9 +10,9 @@ class Dashboard extends CI_Controller {
         parent::__construct();
         $this->load->model(['Menu_model', 'AsignarMenu_model']);
         
-        // if ($this->session->userdata('status') !== "AezakmiHesoyamWhosyourdaddy") {
-        //     redirect(base_url("Login"));
-        // }
+         if ($this->session->userdata('status') !== "AezakmiHesoyamWhosyourdaddy") {
+            redirect(base_url("Login"));
+         }
     }
 
     public function index() {
@@ -185,10 +185,19 @@ if (!is_array($sedes_usuario)) {
     
         // Query para obtener los datos
         $sql = "
+            WITH Planes AS (
+                SELECT 
+                    mascota_patient_id, 
+                    tenant_id, 
+                    MAX(fecha_fin) AS ultima_fecha_fin
+                FROM planessalud2
+                WHERE is_deleted = 0
+                GROUP BY mascota_patient_id, tenant_id
+            )
             SELECT 
                 se.nombre AS Sede, 
-                date(s.FechaDelDocumento) AS FechaVenta,
-                time(s.FechaDelDocumento) AS HoraVenta,
+                DATE(s.FechaDelDocumento) AS FechaVenta,
+                TIME(s.FechaDelDocumento) AS HoraVenta,
                 CASE 
                     WHEN s.Anulado = 1 THEN 'Anulada'
                     ELSE 'Emitida'
@@ -197,19 +206,9 @@ if (!is_array($sedes_usuario)) {
                 s.GroomersTexto1 AS Clasificacion,
                 s.GroomersTexto2 AS SubClasificacion,
                 s.GroomersTexto3 AS NumeroOrdenContrato,
-                CASE 
-                    WHEN s.TipoDeComprobante = 0 THEN 'Boleta Electronica'
-                    WHEN s.TipoDeComprobante = 1 THEN 'Factura Electronica'
-                    WHEN s.TipoDeComprobante = 2 THEN 'Boleta Fisica'
-                    WHEN s.TipoDeComprobante = 3 THEN 'Factura Fisica'
-                    WHEN s.TipoDeComprobante = 4 THEN 'Comprobante Interno'
-                    WHEN s.TipoDeComprobante = 11 THEN 'Nota de Credito Factura Elect.'
-                    WHEN s.TipoDeComprobante = 12 THEN 'Nota de Debito Factura Elect.'
-                    WHEN s.TipoDeComprobante = 21 THEN 'Nota de Credito Boleta Elect.'
-                    WHEN s.TipoDeComprobante = 22 THEN 'Nota de Debito Boleta Elect.'
-                    ELSE 'Borrador'
-                END AS TipoComprobante,
-                CONCAT(NoSerie, '-', NoCorrelativo) AS NumeroRecibo,
+                tc.nombre AS TipoComprobante,
+                CONCAT(s.NoSerie, '-', s.NoCorrelativo) AS NumeroRecibo,
+                CONCAT(ma.apellido, ' ', ma.nombre) AS Mascota,
                 c.identificacion AS IdentificacionCliente,
                 CONCAT(c.apellido, ' ', c.nombre) AS Cliente,
                 s.RUC,
@@ -230,18 +229,66 @@ if (!is_array($sedes_usuario)) {
                     ELSE s.GlobalTotal
                 END AS MontoTotal,
                 s.FechaDelDocumento,
-                (SELECT MIN(FechaDelDocumento) 
-                FROM sales s2 
-                WHERE s2.PatientId = s.PatientId) AS PrimeraCompra
+
+                IF(s.PatientId IS NOT NULL,
+                (SELECT MIN(s2.FechaDelDocumento) 
+                    FROM sales s2 
+                    WHERE s2.PatientId = s.PatientId),
+                (SELECT MIN(s2.FechaDelDocumento) 
+                    FROM sales s2 
+                    WHERE s2.PatientId IS NULL AND s2.RUC = s.RUC)
+                ) AS PrimeraCompra,
+
+                CASE
+                    WHEN IF(s.PatientId IS NOT NULL,
+                            (SELECT MIN(s2.FechaDelDocumento) 
+                            FROM sales s2 
+                            WHERE s2.PatientId = s.PatientId),
+                            (SELECT MIN(s2.FechaDelDocumento) 
+                            FROM sales s2 
+                            WHERE s2.PatientId IS NULL AND s2.RUC = s.RUC)
+                        ) IS NULL THEN 'N/A'
+                    WHEN s.FechaDelDocumento = IF(s.PatientId IS NOT NULL,
+                            (SELECT MIN(s2.FechaDelDocumento) 
+                            FROM sales s2 
+                            WHERE s2.PatientId = s.PatientId),
+                            (SELECT MIN(s2.FechaDelDocumento) 
+                            FROM sales s2 
+                            WHERE s2.PatientId IS NULL AND s2.RUC = s.RUC)
+                        ) THEN 'Cliente Nuevo'
+                    ELSE 'Cliente Frecuente'
+                END AS TipoCliente,
+
+                (SELECT MAX(s2.FechaDelDocumento) 
+                FROM sales s2
+                LEFT JOIN sale_details sd2 ON s2.SaleId = sd2.SaleId
+                LEFT JOIN servicios sv2 ON sd2.ServicioId = sv2.ServicioId
+                WHERE sv2.Categoria = 'Movilidad' 
+                AND s2.MascotaPatientId = s.MascotaPatientId
+                ) AS Mov,
+
+                CASE 
+                    WHEN p.ultima_fecha_fin IS NULL THEN 'Sin Plan'
+                    WHEN p.ultima_fecha_fin >= CURDATE() 
+                    THEN CONCAT('Plan Vigente hasta ', DATE_FORMAT(p.ultima_fecha_fin, '%Y-%m-%d'), 
+                                ' (faltan ', DATEDIFF(p.ultima_fecha_fin, CURDATE()), ' días)')
+                    ELSE CONCAT('Plan Vencido el ', DATE_FORMAT(p.ultima_fecha_fin, '%Y-%m-%d'), 
+                                ' (pasaron ', ABS(DATEDIFF(p.ultima_fecha_fin, CURDATE())), ' días)')
+                END AS EstadoPlan
             FROM sales s 
             LEFT JOIN sedes se ON s.TenantId = se.TenantId
-            LEFT JOIN clientes2 c ON s.PatientId = c.patient_id
+            LEFT JOIN mascotas2 ma ON s.MascotaPatientId = ma.patient_id AND ma.tenant_id = s.TenantId
+            LEFT JOIN clientes2 c ON s.PatientId = c.patient_id AND c.tenant_id = s.TenantId
+            INNER JOIN tipos_comprobante tc ON s.TipoDeComprobante = tc.id
+            LEFT JOIN Planes p ON p.mascota_patient_id = s.MascotaPatientId AND p.tenant_id = s.TenantId
             WHERE s.FechaDelDocumento BETWEEN ? AND ? 
             $sedeClause 
             $diaClause
             $turnoClause
-            group by s.SaleId
-            ORDER BY s.FechaDelDocumento DESC";
+            GROUP BY s.SaleId
+            ORDER BY s.FechaDelDocumento DESC;
+
+            ";
     
         $resultado = $this->db->query($sql, [$fecha_inicio . ' 00:00:00', $fecha_fin . ' 23:59:59'])->result_array();
     

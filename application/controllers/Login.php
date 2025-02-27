@@ -8,7 +8,22 @@ class Login extends CI_Controller {
     }
 
     function index() {
-        $this->load->view('login');
+        // Obtener el tipo de fondo (imagen o default)
+        $queryTipo = $this->db->get_where('digide', ['clave' => 'background_type']);
+        $tipoFondo = $queryTipo->row() ? $queryTipo->row()->valor : 'default';
+
+        // Si el tipo es 'imagen', obtener la URL de la imagen
+        $urlImagen = '';
+        if ($tipoFondo === 'imagen') {
+            $queryImagen = $this->db->get_where('digide', ['clave' => 'background_image']);
+            $urlImagen = $queryImagen->row() ? $queryImagen->row()->valor : '';
+        }
+
+        // Pasar los datos a la vista
+        $data['background_type'] = $tipoFondo;
+        $data['background'] = $urlImagen;
+
+        $this->load->view('login', $data);
     }
  
 	function masuk() {

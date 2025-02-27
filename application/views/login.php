@@ -15,11 +15,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <link href="<?php echo base_url('assets/css/login.css'); ?>" rel="stylesheet">
 
   </head>
-  <body translate="no" tabindex="0">
+
+  <body translate="no" tabindex="0" style="
+    <?php if ($background_type === 'imagen' && !empty($background)): ?>
+        background: url('<?php echo $background; ?>') no-repeat center center fixed;
+        background-size: cover;
+        backdrop-filter: blur(3px);
+    <?php else: ?>
+        background: linear-gradient(90deg, #7209d4, #2832d4 33%, #00a5b2);
+    <?php endif; ?>
+">
 
   <form id="loginForm" class="form-signin">
       <div class="text-center mb-4">
-        <img src="./assets/logo2.png" alt="logo" width="300">
+        <img src="./assets/logo2.png" alt="logo" class="logo" width="300">
         <h1 class="h3 mt-5 mb-3 font-weight-normal">
         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-briefcase-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 		  <path fill-rule="evenodd" d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85v5.65z"/>
@@ -63,18 +72,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
+    const loginButton = document.querySelector('button[type="submit"]');
+    loginButton.disabled = true;
+    loginButton.textContent = 'Validando credenciales...';
+
     const formData = new FormData(this);
-    const queryString = new URLSearchParams(formData).toString(); // Convierte los datos del formulario en una cadena de consulta
+    const queryString = new URLSearchParams(formData).toString();
 
-    const response = await fetch('<?php echo site_url('login/masuk'); ?>?' + queryString, {
-        method: 'GET',  // Usamos GET
-    });
+    try {
+        const response = await fetch('<?php echo site_url('login/masuk'); ?>?' + queryString, {
+            method: 'GET',
+        });
 
-    const result = await response.json();
-    if (result.success) {
-        window.location.href = result.redirect;
-    } else {
-        Swal.fire('Error', result.message, 'error');
+        const result = await response.json();
+        
+        if (result.success) {
+            window.location.href = result.redirect;
+        } else {
+            Swal.fire('Error', result.message, 'error');
+            loginButton.disabled = false;
+            loginButton.textContent = 'Ingresar';
+        }
+    } catch (error) {
+        Swal.fire('Error', 'Ocurrió un problema al procesar la solicitud', 'error');
+        loginButton.disabled = false;
+        loginButton.textContent = 'Ingresar';
     }
 });
-    </script>
+</script>

@@ -1,4 +1,4 @@
-<div style="position: fixed; bottom: 0; width: 100%; box-shadow: 0px -1px 5px #282c33; background: #2832D4; font-size: 12px;height: 31px; color: #FFF; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+<!-- <div style="position: fixed; bottom: 0; width: 100%; box-shadow: 0px -1px 5px #282c33; background: #2832D4; font-size: 12px;height: 31px; color: #FFF; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
 <?php
 // Establecer la zona horaria a Lima
 date_default_timezone_set('America/Lima');
@@ -9,10 +9,10 @@ setlocale(LC_TIME, 'es_PE.UTF-8'); // Configurar idioma a español
         &copy; Petmax SAC
     </div>
     <div id="fecha-hora">
-        <?php echo strftime("%A, %d de %B de %Y %H:%M:%S"); ?> <!-- Fecha y hora inicial con segundos -->
+        <?php echo strftime("%A, %d de %B de %Y %H:%M:%S"); ?> 
     </div>
 
-</div>
+</div> -->
 
 
 
@@ -35,7 +35,7 @@ setlocale(LC_TIME, 'es_PE.UTF-8'); // Configurar idioma a español
   </div>
 </div>
 
-  <script>
+ <script>
      document.getElementById('openModal').addEventListener('click', function (event) {
     event.preventDefault();
     var myModal = new bootstrap.Modal(document.getElementById('logoutModal'));
@@ -43,7 +43,7 @@ setlocale(LC_TIME, 'es_PE.UTF-8'); // Configurar idioma a español
   });
   
 // Función para actualizar la fecha y hora cada segundo
-function actualizarFechaHora() {
+/*function actualizarFechaHora() {
     const fechaHoraElement = document.getElementById('fecha-hora');
     const fechaHora = new Date().toLocaleString('es-PE', {
         weekday: 'long', // Día de la semana completo
@@ -62,8 +62,8 @@ function actualizarFechaHora() {
 actualizarFechaHora();
 
 // Actualizar la fecha y hora cada segundo (1000 milisegundos)
-setInterval(actualizarFechaHora, 1000);
-</script>
+setInterval(actualizarFechaHora, 1000);*/
+</script> 
   
 </body>
 </html>
