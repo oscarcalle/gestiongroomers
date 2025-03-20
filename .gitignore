@@ -1,0 +1,13 @@
+# IDE / Editor Specific
+.idea/
+/.vscode/
+chart.html
+multiple.html
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Environment Files
+.env
+*.env

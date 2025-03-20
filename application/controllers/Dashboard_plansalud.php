@@ -15,7 +15,14 @@ class Dashboard_plansalud extends MY_Controller {
     }
 
     public function top_mascotas() {
-        $request = json_decode(file_get_contents('php://input'), true);    
+        $request = json_decode(file_get_contents('php://input'), true); 
+        // $fecha_inicio = $request['start'] ?? null;
+        // $fecha_fin = $request['end'] ?? null;
+    
+        // if (!$fecha_inicio || !$fecha_fin) {
+        //     return $this->output_error('Fechas inválidas');
+        // }
+
         $sedeClause = $this->build_in_clause('s.TenantId', $request['sedes'] ?? []);
         
         $sql = "
@@ -33,7 +40,7 @@ class Dashboard_plansalud extends MY_Controller {
         ) s
         LEFT JOIN sedes se ON s.TenantId = se.TenantId
         LEFT JOIN mascotas2 ma ON s.MascotaPatientId = ma.patient_id AND ma.tenant_id = s.TenantId
-        WHERE ma.fallecido = 0
+        WHERE ma.fallecido = 0 
         $sedeClause
         GROUP BY se.nombre, s.MascotaPatientId, ma.apellido, ma.nombre
         ORDER BY Total DESC
@@ -42,6 +49,8 @@ class Dashboard_plansalud extends MY_Controller {
     
         // Ejecutar la consulta con los parámetros de fecha
         $resultado = $this->db->query($sql)->result_array();
+        //ma.fecha_actualizacion BETWEEN ? AND ?  and
+        //$resultado = $this->db->query($sql, [$fecha_inicio . ' 00:00:00', $fecha_fin . ' 23:59:59'])->result_array();
         
         // Devolver el resultado en formato JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($resultado ?: ['error' => 'No se encontraron datos']));

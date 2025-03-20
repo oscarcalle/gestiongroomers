@@ -960,6 +960,7 @@ thead, tfoot {
   text-align: center;
   border-radius: 4px;
   transition: transform 0.3s ease; /* Suaviza la animación */
+  width: 50px !important;
 }
 
 .cell:hover {
@@ -978,6 +979,7 @@ thead, tfoot {
   display: flex;
   align-items: center;
   gap: 5px;
+  
 }
 
 .legend-color {
@@ -988,18 +990,18 @@ thead, tfoot {
 
 /* Heatmap Colors */
 .low {
-  background-color: #FFF3CD;
-  color : #E4A824;
+  background-color: #ED2738;
+  color: black;
 }
 
 .medium {
-  background-color: #FFA500; /* Naranja */
-  color: #FFFFFF; /* Texto blanco para mejor contraste */
+  background-color: #F2BD3F; /* Naranja */
+  color : black;
 }
 
 .high {
-  background-color: #F8D7DA;
-  color: #721C24;
+  background-color: #84BB4E;
+  color: black;
 }
 
 .regiones path {
@@ -1121,4 +1123,50 @@ thead, tfoot {
 
 .card-inverse{
   color: #fff;
+}
+
+.pointer{
+  cursor: pointer;
+}
+
+
+canvas {
+  max-height: 500px !important; /* Ajusta el alto máximo */
+  width: 100% !important; /* Asegura que no se expanda horizontalmente */
+}
+
+.dataTables_processing{
+  z-index: 9999 !important;
+}
+
+svg path {
+  transition: fill 0.3s ease;
+}
+
+
+#tabla-distritos-container {
+  max-height: 300px; /* Ajusta según necesidad */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+}
+
+#tabla-distritos table {
+  width: 100%;
+  border-collapse: collapse;
+  position: relative;
+}
+
+#tabla-distritos thead, 
+#tabla-distritos tfoot {
+  position: sticky;
+  background: white;
+  z-index: 2;
+}
+
+#tabla-distritos thead {
+  top: 0;
+}
+
+#tabla-distritos tfoot {
+  bottom: 0;
 }

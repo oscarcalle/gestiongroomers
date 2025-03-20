@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background-image: url("https://raw.githubusercontent.com/mobalti/open-props-interfaces/refs/heads/main/ai-hero-chat-popover/assets/bg-gradient.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: grid;
+        font-family: var(--font-family-default);
+        min-block-size: max(400px, 100svb);
+        padding-block: var(--size-8);
+        padding-inline: var(--size-7);
+        place-items: start center;
+        position: relative;
+
+        /* xl-n-below */
+        @media (width < 1440px) {
+            background-position: top 20% center;
+            background-size: 150%;
+        }
+
+        /* md-n-below */
+        @media (width < 768px) {
+            background-position: top 20% center;
+            background-size: 1000%;
+        }
+    }
+    .section-cards {
+        display: grid;
+        padding: 0;
+        list-style: none;
+        gap: 32px;
+
+        @media (width >=460px) {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* md-n-above */
+        @media (width >=768px) {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+    }
+    .card-wrap {
+        text-decoration: none;
+        color: var(--gray-12);
+        background: var(--card-bg);
+        background-image: linear-gradient(170.96deg,
+                oklch(100% 0 0 / 60%) 18.95%,
+                oklch(100% 0 0 / 20%) 99.73%);
+        display: grid;
+        block-size: 100%;
+        border-radius: 12px;
+        padding: 12px;
+        border-width: var(--border-size-1);
+        border-color: white;
+        border-style: solid;
+        text-align: start;
+        cursor: pointer;
+        inline-size: 100%;
+    }
+    .figure {
+        display: grid;
+        gap: var(--size-3);
+        grid-template-rows: min-content 1fr;
+    }
+
+    .visual {
+        background-image: var(--gradient-15);
+        border-radius: 10px;
+        block-size: 175px;
+        overflow: clip;
+    }
+
+    .img {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+    }
+
+    .figcaption {
+        font-weight: var(--font-weight-7);
+        font-size: var(--font-size-2);
+        font-family: var(--font-family-default);
+    }
+</style>
+<body>
+    <ul class="section-cards">
+            <li class="card">
+              <button popovertarget="chat-popover" class="card-wrap">
+                <figure class="figure">
+                  <div class="visual">
+                    <img class="img" width="222" height="175" src="https://raw.githubusercontent.com/mobalti/open-props-interfaces/refs/heads/main/ai-hero-chat-popover/assets/img-1.jpg" alt="Christmas background 3D cartoon">
+                  </div>
+                  <div class="figcaption">Create compelling content now</div>
+                </figure>
+              </button>
+            </li>
+            <li class="card">
+              <button popovertarget="chat-popover" class="card-wrap">
+                <figure class="figure">
+                  <div class="visual">
+                    <img class="img" width="222" height="175" src="https://raw.githubusercontent.com/mobalti/open-props-interfaces/refs/heads/main/ai-hero-chat-popover/assets/img-2.jpg" alt="A beautiful glowing flower">
+                  </div>
+                  <div class="figcaption">Design stunning visuals effortlessly</div>
+                </figure>
+              </button>
+            </li>
+            <li class="card">
+              <button popovertarget="chat-popover" class="card-wrap">
+                <figure class="figure">
+                  <div class="visual">
+                    <img class="img" width="222" height="175" src="https://raw.githubusercontent.com/mobalti/open-props-interfaces/refs/heads/main/ai-hero-chat-popover/assets/img-3.jpg" alt="A magical leopard">
+                  </div>
+                  <div class="figcaption">Edit with ready-made templates</div>
+                </figure>
+              </button>
+            </li>
+            <li class="card">
+              <button popovertarget="chat-popover" class="card-wrap">
+                <figure class="figure">
+                  <div class="visual">
+                    <img class="img" width="222" height="175" src="https://raw.githubusercontent.com/mobalti/open-props-interfaces/refs/heads/main/ai-hero-chat-popover/assets/img-4.jpg" alt="A female 3D cartoon holding a wrapped gift box">
+                  </div>
+                  <div class="figcaption">Explore your custom creations</div>
+                </figure>
+              </button>
+            </li>
+          </ul>
+</body>
+</html>

@@ -45,7 +45,7 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <!-- <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>-->
 
-<link href="<?php echo base_url('assets/css/style.css?v=1.0.18'); ?>" rel="stylesheet">
+<link href="<?php echo base_url('assets/css/style.css?v=1.0.22'); ?>" rel="stylesheet">
 
   <!-- Custom scripts for all pages-->
   <script src="<?php echo base_url('assets/js/jquery.easing.min.js'); ?>"></script>
