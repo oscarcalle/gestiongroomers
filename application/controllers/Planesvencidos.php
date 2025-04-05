@@ -36,8 +36,115 @@ class Planesvencidos extends CI_Controller {
         // Cargar el pie de página al final
         $this->load->view('__footer', $data);
     }
-    
+
     public function obtener_planes() {
+        $fecha_inicio = $this->input->get('fecha_inicio');
+        $fecha_fin = $this->input->get('fecha_fin');
+        $sede = $this->input->get('sede');
+        $especie = $this->input->get('especie');
+    
+        // Parámetros para el query
+        $params = [$fecha_inicio . ' 00:00:00', $fecha_fin . ' 23:59:59'];
+    
+        // Armamos filtros dinámicos
+        $filtros = "";
+    
+        if (!empty($sede)) {
+            if (is_array($sede)) {
+                // Genera placeholders (?, ?, ?) para cada sede
+                $placeholders = implode(',', array_fill(0, count($sede), '?'));
+                $filtros .= " AND se.nombre IN ($placeholders)";
+                $params = array_merge($params, $sede);
+            } else {
+                $filtros .= " AND se.nombre = ?";
+                $params[] = $sede;
+            }
+        }
+    
+        if (!empty($especie)) {
+            $filtros .= " AND ma.especie = ?";
+            $params[] = $especie;
+        }
+    
+        // Consulta SQL
+        $sql = "
+            WITH Planes AS (
+                SELECT
+                    mascota_patient_id,
+                    tenant_id,
+                    MAX(fecha_fin) AS ultima_fecha_fin
+                FROM planessalud2
+                WHERE is_deleted = 0
+                GROUP BY mascota_patient_id, tenant_id
+            ),
+            DireccionUnica AS (
+                SELECT
+                    cd.cliente_id,
+                    MAX(cd.direccion_id) AS direccion_id
+                FROM clientes_direcciones cd
+                GROUP BY cd.cliente_id
+            )
+            SELECT
+                ma.fecha_actualizacion,
+                se.nombre AS sede,
+                CONCAT(ma.apellido, ' ', ma.nombre) AS mascota,
+                c.identificacion AS IdentificacionAmo,
+                CONCAT(c.apellido, ' ', c.nombre) AS cliente,
+                TIMESTAMPDIFF(YEAR, ma.fecha_nacimiento, CURDATE()) AS Edad,
+                ma.sexo, ma.especie, ma.raza,
+                ma.fecha_nacimiento,
+                CASE
+                    WHEN ma.fallecido = 1 THEN 'Fallecido'
+                    ELSE 'Activo'
+                END AS EstatusMascota,
+                CASE
+                    WHEN p.ultima_fecha_fin IS NULL THEN 'Sin Plan'
+                    WHEN p.ultima_fecha_fin >= CURDATE() THEN 'Vigente'
+                    ELSE 'Vencido'
+                END AS EstadoPlan,
+                p.ultima_fecha_fin AS fecha_fin,
+                CASE
+                    WHEN p.ultima_fecha_fin IS NULL THEN NULL
+                    ELSE DATEDIFF(p.ultima_fecha_fin, CURDATE())
+                END AS dias_vencidos,
+                c.movil AS movil,
+                c.email AS email,
+                d.calle1 AS Direccion,
+                d.calle2 AS Distrito,
+                d.ubigeo,
+                d.address_id AS AddressId,
+                c.patient_id AS ClienteId,
+                ma.patient_id AS MascotaId
+            FROM mascotas2 ma
+            LEFT JOIN Planes p
+                ON p.mascota_patient_id = ma.patient_id
+                AND p.tenant_id = ma.tenant_id
+            LEFT JOIN sedes se
+                ON ma.tenant_id = se.TenantId
+            LEFT JOIN clientes_mascotas cm
+                ON cm.mascota_id = ma.patient_id
+            LEFT JOIN clientes2 c
+                ON c.patient_id = cm.cliente_id
+            LEFT JOIN DireccionUnica du
+                ON du.cliente_id = c.patient_id
+            LEFT JOIN direcciones2 d
+                ON d.address_id = du.direccion_id
+            WHERE p.ultima_fecha_fin BETWEEN ? AND ?
+            $filtros
+            GROUP BY ma.patient_id, c.patient_id
+            ORDER BY p.ultima_fecha_fin DESC
+        ";
+    
+        $resultado = $this->db->query($sql, $params)->result_array();
+    
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($resultado, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    }    
+
+	
+    
+    public function obtener_planes_old() {
 		$fecha_inicio = $this->input->get('fecha_inicio');
 		$fecha_fin = $this->input->get('fecha_fin');
 		$sede = $this->input->get('sede');

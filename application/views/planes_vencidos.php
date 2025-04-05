@@ -62,7 +62,7 @@
       <span class="icon-circle bg-info text-white">
         <i class="fa fa-info"></i>
       </span>
-      Información actualizada de <span id="f_ini"></span> a <span id="f_fin"></span>
+      Información actualizada al <span id="f_fin"></span>
     </div>
 
     <div class="mb-4 alert alert-warning" role="alert" style="display: none;">
@@ -166,14 +166,19 @@
 <script>
   // Cargar opciones del select "sede" y responsables al cargar la página
   document.addEventListener('DOMContentLoaded', () => {
-    // Establecer fecha predeterminada para fecha_inicio
-    document.getElementById('fecha_inicio').value = '2024-10-01';
-    document.getElementById('f_ini').innerHTML = '2024-10-01';
+// Obtener la fecha de hace 7 días
+const fechaHace7Dias = new Date();
+fechaHace7Dias.setDate(fechaHace7Dias.getDate() - 7);
+const fechaInicio = fechaHace7Dias.toISOString().split('T')[0];
 
-    // Establecer fecha actual para fecha_fin
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('fecha_fin').value = today;
-    document.getElementById('f_fin').innerHTML = today;
+// Obtener la fecha actual
+const today = new Date().toISOString().split('T')[0];
+
+// Establecer valores en los inputs y etiquetas
+document.getElementById('fecha_inicio').value = fechaInicio;
+
+document.getElementById('fecha_fin').value = today;
+document.getElementById('f_fin').innerHTML  = today;
 
     // Cargar sedes
     cargarSedes();
