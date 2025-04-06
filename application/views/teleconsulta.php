@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Groomers APP</title>
+    <title>Groomers Teleconsulta</title>
     <style>
         * {
             margin: 0;
@@ -163,7 +163,7 @@
 <body>
     <header class="header">
         <div class="notification-icon">🔔</div>
-        <div class="logo">Groomers APP</div>
+        <div class="logo">Groomers Teleconsulta</div>
         <div class="menu-icon">☰</div>
     </header>
 

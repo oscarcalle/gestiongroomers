@@ -31,8 +31,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
-
-
   <!-- CSS para DataTables y Botones -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
@@ -68,7 +66,7 @@
   </div>
 </div>
 
-<div class="page-wrapper chiller-theme"> <!--toggled-->
+<div class="page-wrapper chiller-theme toggled"> <!---->
 <a id="show-sidebar" class="btn btn-sm btn-dark" href="javascript:void(0)">
     <i class="fas fa-bars"></i>
   </a>
@@ -121,9 +119,9 @@
                         <i class="fa <?= $item['icono']; ?>"></i>
                         <span><?= $item['nombre']; ?></span>
                         <?php if (!empty($item['badge'])): ?>
-                            <span class="badge badge-pill bg-info"><?= $item['badge']; ?></span>
+                            <span class="badge badge-pill bg-warning"><?= $item['badge']; ?></span>
                         <?php endif; ?>
-                        <?php if (!empty($item['contador'])): ?>
+                        <?php if ($item['contador']!== 0): ?>
                             <span class="badge badge-pill bg-danger"><?= $item['contador']; ?></span>
                         <?php endif; ?>
                     </a>
@@ -132,11 +130,22 @@
                             <ul>
                                 <?php foreach ($item['submenus'] as $submenu): ?>
                                     <li>
-                                        <a href="<?= $submenu['ruta']; ?>"><?= $submenu['nombre']; ?>
-                                            <?php if (!empty($submenu['badge'])): ?>
-                                                <span class="badge badge-pill bg-success"><?= $submenu['badge']; ?></span>
-                                            <?php endif; ?>
-                                        </a>
+                                    <a 
+                                          href="<?= $submenu['ruta']; ?>" 
+                                          <?= ($submenu['target'] == 1) ? "target='_blank'" : ''; ?>
+                                      >
+                                          <i class="fa <?= $submenu['icono']; ?>" style="color:#fff"></i> 
+                                          <?= $submenu['nombre']; ?>
+
+                                          <?php if (!empty($submenu['badge'])): ?>
+                                              <span class="badge badge-pill bg-success"><?= $submenu['badge']; ?></span>
+                                          <?php endif; ?>
+
+                                          <?php if (!empty($item['contador'])): ?>
+                                              <span class="badge badge-pill bg-danger"><?= $item['contador']; ?></span>
+                                          <?php endif; ?>
+                                      </a>
+
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
@@ -161,13 +170,16 @@
         <i class="fa fa-bell"></i>
         <!-- <span class="badge badge-pill badge-warning notification">3</span> -->
       </a>
-      <a href="javascript:void(0)">
+      <!-- <a href="javascript:void(0)">
         <i class="fa fa-envelope"></i>
-        <!-- <span class="badge badge-pill badge-success notification">7</span> -->
-      </a>
+        <span class="badge badge-pill badge-success notification">7</span> 
+      </a>-->
       <a href="javascript:void(0)">
         <i class="fa fa-cog"></i>
         <span class="badge-sonar"></span>
+      </a>
+      <a href="javascript:void(0)" id="themeToggle" class="theme-toggle" style="cursor:pointer;">
+      <i id="themeIcon" class="fa"></i>
       </a>
       <a href="#" id="openModal" data-bs-toggle="modal" data-target="#logoutModal">
         <i class="fa fa-power-off"></i>

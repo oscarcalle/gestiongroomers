@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script type='text/javascript' src='scaledrone.min.js'></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      display: flex;
+      height: 100vh;
+      margin: 0;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px; /* Reducción del padding para pantallas pequeñas */
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      box-sizing: border-box;
+    }
+    video {
+      width: 100%; /* Asegura que el video ocupe todo el ancho del contenedor */
+      max-width: 600px; /* Tamaño máximo del video */
+      height: auto; /* Mantiene la proporción del video */
+      margin: 10px; /* Margen para separar los videos */
+      border-radius: 4px; /* Radio del borde */
+      box-shadow: rgba(156, 172, 172, 0.2) 0px 2px 2px, rgba(156, 172, 172, 0.2) 0px 4px 4px, rgba(156, 172, 172, 0.2) 0px 8px 8px, rgba(156, 172, 172, 0.2) 0px 16px 16px, rgba(156, 172, 172, 0.2) 0px 32px 32px, rgba(156, 172, 172, 0.2) 0px 64px 64px;
+    }
+    .copy {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      color: rgba(0, 0, 0, 0.5);
+      text-align: center;
+      width: 100%;
+      padding: 0 10px; /* Padding para asegurar que el texto no se corte en pantallas pequeñas */
+      box-sizing: border-box;
+    }
+
+    /* Media queries para ajustar el diseño en pantallas más pequeñas */
+    @media (max-width: 600px) {
+      body {
+        flex-direction: column;
+        padding: 0 10px;
+      }
+      video {
+        max-width: 100%;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!--<div class="copy">Send your URL to a friend to start a video call</div>-->
+  <video id="localVideo" autoplay muted></video>
+  <video id="remoteVideo" autoplay></video>
+  <script src="script.js"></script>
+</body>
+</html>

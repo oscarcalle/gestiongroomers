@@ -11,7 +11,7 @@ class AsignarMenu_model extends CI_Model {
     
         // Obtener el idmenu correspondiente a la ruta
         $this->db->select('idmenu');
-        $this->db->from('menu2');
+        $this->db->from('menu');
         $this->db->where('ruta', $ruta);
         $menu = $this->db->get()->row_array();
     
@@ -55,22 +55,22 @@ class AsignarMenu_model extends CI_Model {
 
     public function get_menus() {
         $this->db->select('*');
-        $this->db->from('menu2');
+        $this->db->from('menu');
         $this->db->where('estado', 'Activo');
         return $this->db->get()->result_array();
     }
 
     public function obtener_menus_asignados($idnivel) {
-        $this->db->select('menu2.*');
+        $this->db->select('menu.*');
         $this->db->from('nivel_menu');
-        $this->db->join('menu2', 'nivel_menu.idmenu = menu2.idmenu');
+        $this->db->join('menu', 'nivel_menu.idmenu = menu.idmenu');
         $this->db->where('nivel_menu.idnivel', $idnivel);
         return $this->db->get()->result_array();
     }
 
     // public function get_menus_tree() {
     //     $this->db->select('idmenu, nombre, ruta, padre_id');
-    //     $this->db->from('menu2');
+    //     $this->db->from('menu');
     //     $this->db->where('estado', 'Activo');
     //     $result = $this->db->get()->result_array();
     
@@ -88,11 +88,13 @@ class AsignarMenu_model extends CI_Model {
     // }
 
     public function get_menus_tree() {
+        // Obtener todos los menús y submenús de la base de datos
         $this->db->select('idmenu, nombre, ruta, padre_id');
-        $this->db->from('menu2');
+        $this->db->from('menu');
         $this->db->where('estado', 'Activo');
+        $this->db->order_by('COALESCE(padre_id, 0) ASC, orden ASC', null); // segundo parámetro "null" es clave
         $result = $this->db->get()->result_array();
-    
+        
         $tree = [];
         foreach ($result as $menu) {
             if ($menu['padre_id'] == null) {
@@ -114,7 +116,7 @@ class AsignarMenu_model extends CI_Model {
     }
 
     public function menu_existe($idmenu) {
-        $this->db->from('menu2');
+        $this->db->from('menu');
         $this->db->where('idmenu', $idmenu);
         return $this->db->count_all_results() > 0;
     }

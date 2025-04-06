@@ -9,61 +9,60 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <title>Sistema de Gestión Veterinaria - Groomers</title>
     <link rel="icon" href="<?php echo base_url('assets/favicon.png'); ?>" type="image/x-icon">
 
-    <!-- Bootstrap core CSS -->
-	<link href="<?php echo base_url('assets/css/bootstrap.min.css'); ?>" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Custom styles for Login -->
     <link href="<?php echo base_url('assets/css/login.css'); ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/login/bootstrap.min.css'); ?>" rel="stylesheet">
 
   </head>
 
-  <body translate="no" tabindex="0" style="
-    <?php if ($background_type === 'imagen' && !empty($background)): ?>
-        background: url('<?php echo $background; ?>') no-repeat center center fixed;
-        background-size: cover;
-        backdrop-filter: blur(3px);
-    <?php else: ?>
-        background: linear-gradient(90deg, #7209d4, #2832d4 33%, #00a5b2);
-    <?php endif; ?>
-">
+  <body translate="no" tabindex="0">
 
-  <form id="loginForm" class="form-signin">
-      <div class="text-center mb-4">
-        <img src="./assets/logo2.png" alt="logo" class="logo" width="300">
-        <h1 class="h3 mt-5 mb-3 font-weight-normal">
-        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-briefcase-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-		  <path fill-rule="evenodd" d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85v5.65z"/>
-		  <path fill-rule="evenodd" d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5v1.384l-7.614 2.03a1.5 1.5 0 0 1-.772 0L0 5.884V4.5zm5-2A1.5 1.5 0 0 1 6.5 1h3A1.5 1.5 0 0 1 11 2.5V3h-1v-.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V3H5v-.5z"/>
-		</svg>
-          Sistema de Gestión
-        </h1>
+<div class="container-fluid ps-md-0" >
+    <div class="row g-0">
+      <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+      <div class="col-md-8 col-lg-6">
+        <div class="login d-flex align-items-center py-5">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-9 col-lg-8 mx-auto">
+                
+                <div class="text-center">
+                  <img src="./assets/logo.png" alt="" width="400px" style="margin-bottom: 25px;">
+                  <h3 class="login-heading mb-4">Sistema de Gestión Veterinaria</h3>
+                </div>
+  
+                <!-- Sign In Form -->
+                <form  id="loginForm">
+                  <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="username" name="username" placeholder="name@example.com" required>
+                    <label for="floatingInput">Correo electrónico</label>
+                  </div>
+                  <div class="form-floating mb-3 input-group">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required>
+                    <label for="password">Contraseña</label>
+                    <button type="button" class="input-group-text" id="togglePassword" style="cursor:pointer;">
+                      <i class="fa fa-eye" id="iconEye"></i>
+                    </button>
+                  </div>
+
+                  <div class="d-grid">
+                    <button class="btn btn-lg btn-primary btn-login mb-2" type="submit"><i class="fa fa-arrow-right"></i> Iniciar sesión</button>
+                    <div class="text-center">
+                      <a class="small" href="#" class="link"> Regístrate</a>
+                      &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a class="small" href="#" class="link">¿Olvidaste tu contraseña?</a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div class="form-label-group">
-        <input type="text" id="username" name="username" class="form-control" placeholder="Correo Electrónico" required autofocus>
-        <label for="username">Email</label>
-      </div>
-
-      <div class="form-label-group">
-        <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required>
-        <label for="password">Password</label>
-      </div>
-
-      <!-- <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" name="remember" id="remember" value="remember-me"> Recuérdame
-        </label>
-      </div> -->
-      <button class="btn btn-lg btn-success btn-block" type="submit">Ingresar</button>
-    </form>
-
-    <footer class="footer mt-auto py-3">
-  <div class="container">
-    <div class="d-flex justify-content-between">
-      <p class="mb-0">&copy; <?php echo date("Y"); ?> .PETMAX SAC</p>
-      <p class="mb-0">Created by Liversoft</p>
     </div>
-  </div>
-</footer>
+</div>
 
   </body>
 </html>
@@ -99,4 +98,15 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         loginButton.textContent = 'Ingresar';
     }
 });
+
+document.getElementById('togglePassword').addEventListener('click', function () {
+    const passwordInput = document.getElementById('password');
+    const icon = document.getElementById('iconEye');
+
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    icon.classList.toggle('fa-eye');
+    icon.classList.toggle('fa-eye-slash');
+});
+
 </script>

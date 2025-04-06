@@ -41,28 +41,41 @@ setlocale(LC_TIME, 'es_PE.UTF-8'); // Configurar idioma a español
     var myModal = new bootstrap.Modal(document.getElementById('logoutModal'));
     myModal.show();
   });
+
+   // Elementos necesarios
+   const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const mainNavbar = document.getElementById('mainNavbar');
+
+  // Obtener tema guardado o usar claro por defecto
+  let isDarkTheme = localStorage.getItem('theme') === 'dark';
+
+  // Función para aplicar el tema
+  function applyTheme() {
+    document.documentElement.setAttribute("data-bs-theme", isDarkTheme ? "dark" : "light");
+
+    // Cambiar ícono
+    themeIcon.classList.remove('fa-sun', 'fa-moon');
+    themeIcon.classList.add(isDarkTheme ? 'fa-moon' : 'fa-sun');
+
+    // Cambiar clases del navbar si existe
+    if (mainNavbar) {
+      mainNavbar.classList.remove('navbar-dark', 'navbar-light', 'bg-dark', 'bg-light');
+      mainNavbar.classList.add(isDarkTheme ? 'navbar-dark' : 'navbar-light');
+      mainNavbar.classList.add(isDarkTheme ? 'bg-dark' : 'bg-light');
+    }
+  }
+
+  // Al cargar la página, aplicar el tema
+  applyTheme();
+
+  // Al hacer click en el botón, cambiar tema
+  themeToggle.addEventListener('click', () => {
+    isDarkTheme = !isDarkTheme;
+    localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
+    applyTheme();
+  });
   
-// Función para actualizar la fecha y hora cada segundo
-/*function actualizarFechaHora() {
-    const fechaHoraElement = document.getElementById('fecha-hora');
-    const fechaHora = new Date().toLocaleString('es-PE', {
-        weekday: 'long', // Día de la semana completo
-        year: 'numeric', 
-        month: 'long', // Mes completo
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit',
-        second: '2-digit', // Incluir los segundos
-        hour12: true // Formato de 12 horas (AM/PM)
-    });
-    fechaHoraElement.innerHTML = fechaHora;
-}
-
-// Actualizar la fecha y hora al cargar la página
-actualizarFechaHora();
-
-// Actualizar la fecha y hora cada segundo (1000 milisegundos)
-setInterval(actualizarFechaHora, 1000);*/
 </script> 
   
 </body>
